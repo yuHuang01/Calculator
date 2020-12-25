@@ -1,73 +1,111 @@
-//screen
-let screen = document.getElementById("screen");
+let userInput = document.getElementById("userInput");
+let resultDisp = document.getElementById("resultDisp");
+let allBtns = document.getElementsByClassName("allBtns");
+let body = document.getElementById("body");
+let firstInput;
+let secondInput;
 
-let result = document.getElementById("result")
-result.style.backgroundColor = "red"
+for(let i = 0; i < allBtns.length; i++){
+    allBtns[i].addEventListener("click", (e) => {
+        let targetBtn = e.target;
+        //First character entered
+        if(userInput.childNodes.length === 0){
+            if(targetBtn.id === "equal"){
+                alert("The equation should be entered first!")
+            }
+            else if(targetBtn.id === "clear"){
+                ClearAll();
+            }
+            else if(targetBtn.classList.contains("operationBtns")){
+                switch(targetBtn.id){
+                    case "minus":
+                        AddFirstChar(targetBtn);
+                        break;
+                    default:
+                        alert("Operation can't be done now!")
+                }
+            }
+            else if(targetBtn.classList.contains("numberBtns")){
+           AddFirstChar(targetBtn)
+            }
+        }
 
-let currentInput = document.getElementById("userInput");
-currentInput.style.backgroundColor = "blue"
 
-
-
-//operation buttons
-let opBtns = document.getElementsByClassName("operationBtns")
-for(let i = 0; i < opBtns.length; i++){
-    opBtns[i].addEventListener("mouseenter", opHoverOn);
-    opBtns[i].addEventListener("mouseleave", opHoverOff);
-    opBtns[i].addEventListener("click", enterOp)
-};
-function opHoverOn(e){
-    let targetDiv = e.target;
-    targetDiv.style.backgroundColor = "rgb(96, 96, 99)"
-};
-function opHoverOff(e){
-    let targetDiv = e.target;
-    targetDiv.style.backgroundColor = " rgb(30, 30, 34)";
-};
-function enterOp(e){
-    console.log(e.target.textContent)
+        //Not the first character entered
+        else{
+            if(targetBtn.id === "clear"){
+                ClearAll()
+            }
+            else if(targetBtn.id === "equal"){
+                console.log(targetBtn)
+                console.log("equal ok")
+            }
+            else if(targetBtn.classList.contains("numberBtns")){
+                let alreadyInput = document.getElementById("numberInput")
+                if(alreadyInput.textContent.length <= 15){
+                    AddTheOthers(targetBtn);
+                }
+                else{
+                    let warDiv = document.getElementById("warningMess");
+                    if(!warDiv.hasChildNodes()){
+                        let alertMessage = document.createElement("p");
+                        alertMessage.textContent = "Your number has reached the limit of the screen!"
+                        alertMessage.id = "alertMessage";
+                        alertMessage.style.fontStyle = "italic";
+                        alertMessage.style.color = "white";
+                        alertMessage.style.textAlign = "center";
+                        warDiv.appendChild(alertMessage);
+                        }
+                }
+            }
+            else{
+                let alreadyInput = document.getElementById("numberInput")
+                let storedNum = document.createElement("p")
+                storedNum.textContent = userInput.childNodes[0].textContent;
+                firstInput = storedNum.textContent;
+                storedNum.id = "storedNum";
+                storedNum.style.marginTop = 0;
+                storedNum.style.marginBottom = 0;
+                resultDisp.appendChild(storedNum);
+                userInput.removeChild(alreadyInput)
+            }
+        }
+    });
+    
 }
-//Operations
-function add(a, b){
-    return a + b;
+function AddFirstChar(a){
+    let defaultNum = document.createElement("p");
+    defaultNum.textContent = a.textContent;
+    defaultNum.style.marginTop = 0;
+    defaultNum.style.marginBottom = 0;
+    defaultNum.id = "numberInput";
+    userInput.appendChild(defaultNum);
 }
-function subtract(a, b){
-    return a - b;
-}
-function multiply(a, b){
-    return a * b;
-}
-function divide(a, b){
-    return a / b;
-}
-
-//number buttons
-let numBtns = document.getElementsByClassName("numberBtns")
-for(let i = 0; i < numBtns.length; i++){
-    numBtns[i].addEventListener("mouseenter", numHoverOn);
-    numBtns[i].addEventListener("mouseleave", numHoverOff);
-    numBtns[i].addEventListener("click", enterNum)
+function AddTheOthers(a){
+    let currentNum = userInput.childNodes[0];
+    currentNum.textContent += a.textContent;
 };
-function numHoverOn(e){
-    let targetDiv = e.target;
-    targetDiv.style.backgroundColor = "rgb(96, 96, 99)"
+function ClearAll(){
+    if(userInput.hasChildNodes() && resultDisp.hasChildNodes()){
+        userInput.firstChild.remove();
+        resultDisp.firstChild.remove();
+    }
+    else if(userInput.hasChildNodes() && !resultDisp.hasChildNodes()){
+        userInput.firstChild.remove();
+    }
+    else if(!userInput.hasChildNodes() && resultDisp.hasChildNodes()){
+        resultDisp.firstChild.remove();
+    }
 };
-function numHoverOff(e){
-    let targetDiv = e.target;
-    targetDiv.style.backgroundColor = "rgb(41, 41, 46)";
-};
-function enterNum(e){
-    let enter = e.target.textContent;
-};
-
-//clear button
-let clearBtn = document.getElementById("clear");
-clearBtn.addEventListener("mouseenter",cOn);
-clearBtn.addEventListener("mouseleave", cOff);
-
-function cOn(e){
-    e.target.style.backgroundColor = "rgb(233, 144, 42)"
-};
-function cOff(e){
-    e.target.style.backgroundColor = " rgb(204, 115, 13)"
+function Operate(a, b, c){
+    switch(a){
+        case "add":
+            return b + c;
+        case "minus":
+            return b - c;
+        case "multiply":
+            return b * c;
+        case "division":
+            return b / c;
+    }
 };
