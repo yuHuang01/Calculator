@@ -2,89 +2,108 @@ let topScreen = document.getElementById("topScreen");
 let bottomScreen = document.getElementById("bottomScreen");
 let allBtns = document.getElementsByClassName("allBtns");
 let body = document.getElementById("body");
-let firstInput;
-let opToBeDone;
-let secondInput;
+let themeCounter = 1;
 
 for(let i = 0; i < allBtns.length; i++){
     allBtns[i].addEventListener("click", (e) => {
         let targetBtn = e.target;
-        //First character entered
-        if(topScreen.childNodes.length === 0){
-            if(targetBtn.id === "equal"){
-                alert("The equation should be entered first!")
-            }
-            else if(targetBtn.id === "clear"){
-                ClearAll();
-            }
-            else if(targetBtn.classList.contains("operationBtns")){
-                switch(targetBtn.id){
-                    case "minus":
-                        AddFirstChar(targetBtn);
-                        break;
-                    default:
-                        alert("Operation can't be done now!")
+        //If there was no operation before
+        if(bottomScreen.childNodes.length === 0){
+            //Entered as the first character
+            if(topScreen.childNodes.length === 0){
+                if(targetBtn.classList.contains("numberBtns")){
+                    RemoveWarnMess();
+                    AddFirstChar(targetBtn)
+                }
+                else{
+                    WarnMess("You should enter some numbers first!")
                 }
             }
-            else if(targetBtn.classList.contains("numberBtns")){
-           AddFirstChar(targetBtn)
+            //Not entered as the first character
+            else{
+                if(targetBtn.classList.contains("numberBtns")){
+                    if(topScreen.childNodes[0].textContent.length <= 15){
+                        RemoveWarnMess();
+                        AddTheOthers(targetBtn);
+                    }
+                    else{
+                        WarnMess("Your operation has reached the limit of the screen!")
+                    }
+                }
+                else{
+                    let cInput = topScreen.firstChild.textContent;
+                    //check if the user want to input operator after an operator
+                    if(topScreen.childNodes[0].textContent.length <= 15){
+                        if(cInput[cInput.length -2] !== "+" && cInput[cInput.length -2] !== "-" && cInput[cInput.length -2] !== "*" && cInput[cInput.length -2] !== "/" && cInput[cInput.length -2] !== "=" && cInput[cInput.length -2] !== "%"){
+                            RemoveWarnMess();
+                            switch(targetBtn.id){
+                                case "clear":
+                                    ClearAll()
+                                    break;
+                                case "delete":
+                                    deleteLast()
+                                    break;
+                                case "equal":
+                                    finishOp()
+                                    break;
+                                default:
+                                    AddTheOthers(targetBtn);
+                                    break;
+                            }
+                        }
+                        else{
+                            if(targetBtn.id === "delete" || targetBtn.id === "clear"){
+                                switch(targetBtn.id){
+                                    case "clear":
+                                        ClearAll();
+                                        break;
+                                    case "delete":
+                                        deleteLast()
+                                        break;
+                                }
+                            }
+                            else{
+                                WarnMess("You can't put an operator after another operator!")
+                            }    
+                        }
+                    }
+                    else{
+                        if(targetBtn.id === "clear"){
+                            ClearAll()
+                        }
+                        else if(targetBtn.id === "delete"){
+
+                        }
+                        else if(targetBtn.id === "equal"){
+                            finishOp()
+                        }
+                        else{WarnMess("Your operation has reached the limit of the screen!")
+                        }
+                    }
+                }
+                
             }
         }
-
-
-        //Not the first character entered
+        //If there was an operation before
         else{
-            if(targetBtn.id === "clear"){
-                ClearAll()
-            }
-            else if(targetBtn.id === "equal"){
-                if(document.getElementById("numberInput").textContent != "-"){
-                secondInput = document.getElementById("numberInput").textContent;
-                let result = Operate(opToBeDone, parseFloat(firstInput), parseFloat(secondInput));
-                bottomScreen.removeChild(bottomScreen.childNodes[0]);
-                topScreen.removeChild(topScreen.childNodes[0]);
-                let resultToStore = document.createElement("p");
-                resultToStore.style.marginTop = 0;
-                resultToStore.style.marginBottom = 0;
-                resultToStore.textContent = result;
-                bottomScreen.appendChild(resultToStore);
-                }
-                else{
-                    alert("You need to enter a number first!")
-                }
-            }
-            else if(targetBtn.classList.contains("numberBtns")){
-                let alreadyInput = document.getElementById("numberInput")
-                if(alreadyInput.textContent.length <= 15){
-                    AddTheOthers(targetBtn);
-                }
-                else{
-                    let warDiv = document.getElementById("warningMess");
-                    if(!warDiv.hasChildNodes()){
-                        let alertMessage = document.createElement("p");
-                        alertMessage.textContent = "Your number has reached the limit of the screen!"
-                        alertMessage.id = "alertMessage";
-                        alertMessage.style.fontStyle = "italic";
-                        alertMessage.style.color = "white";
-                        alertMessage.style.textAlign = "center";
-                        warDiv.appendChild(alertMessage);
-                        }
-                }
+            if(targetBtn.classList.contains("numberBtns")){
+                WarnMess("You should chosse an operation first!")
             }
             else{
-                opToBeDone = e.target.id;
-                //Store the number and push it to the bottom screen
-                let alreadyInput = document.getElementById("numberInput")
-                let storedNum = document.createElement("p")
-                storedNum.textContent = topScreen.childNodes[0].textContent;
-                firstInput = storedNum.textContent;
-                storedNum.id = "storedNum";
-                storedNum.style.marginTop = 0;
-                storedNum.style.marginBottom = 0;
-                bottomScreen.appendChild(storedNum);
-                topScreen.removeChild(alreadyInput)
+                switch(targetBtn.id){
+                    case "clear":
+                    case "delete":
+                        bottomScreen.firstChild.remove();
+                        break;
+                    default:
+                        let lastResult = bottomScreen.firstChild;
+                        AddFirstChar(lastResult);
+                        AddTheOthers(targetBtn);
+                        bottomScreen.firstChild.remove();
+                }
             }
         }
+        
     });
     
 }
@@ -93,7 +112,7 @@ function AddFirstChar(a){
     firstNum.textContent = a.textContent;
     firstNum.style.marginTop = 0;
     firstNum.style.marginBottom = 0;
-    firstNum.id = "numberInput";
+    firstNum.id = "userInput";
     topScreen.appendChild(firstNum);
 }
 function AddTheOthers(a){
@@ -111,16 +130,66 @@ function ClearAll(){
     else if(!topScreen.hasChildNodes() && bottomScreen.hasChildNodes()){
         bottomScreen.firstChild.remove();
     }
+
+};
+function deleteLast(){
+    let cInput = topScreen.firstChild.textContent;
+    cInput = cInput.substring(0, cInput.length - 1);
+    topScreen.firstChild.remove();
+    let firstNum = document.createElement("p");
+    firstNum.textContent = cInput;
+    firstNum.style.marginTop = 0;
+    firstNum.style.marginBottom = 0;
+    firstNum.id = "userInput";
+    topScreen.appendChild(firstNum);
 };
 function Operate(a, b, c){
     switch(a){
-        case "add":
+        case "+":
             return b + c;
-        case "minus":
+        case "-":
             return b - c;
-        case "multi":
+        case "*":
             return b * c;
-        case "division":
+        case "/":
             return b / c;
+        case "%":
+            return b % c;
     }
 };
+function finishOp(){
+    let myInput = topScreen.firstChild.textContent;
+    let eqArray = myInput.split(" ");
+    let result = Operate(eqArray[1], parseFloat(eqArray[0]), parseFloat(eqArray[2]));
+    if(result.length > 15){
+        result = parseFloat(result).toExponential(4);
+    }
+    topScreen.firstChild.remove();
+    let opResult = document.createElement("p");
+    opResult.textContent = result;
+    opResult.style.marginTop = 0;
+    opResult.style.marginBottom = 0;
+    opResult.id = "userInput";
+    bottomScreen.appendChild(opResult);
+}
+function WarnMess(a){
+    let message = document.createElement("p");
+    message.style.marginTop = "15px";
+    message.style.marginBottom = 0;
+    message.textContent = a;
+    message.id = "alertMessage";
+    message.style.fontStyle = "italic";
+    message.style.color = "white";
+    message.style.textAlign = "center";
+    let warDiv = document.getElementById("warningMess");
+    if(warDiv.hasChildNodes()){
+        warDiv.firstChild.remove();
+    };
+    warDiv.appendChild(message);
+}
+function RemoveWarnMess(){
+    let warDiv = document.getElementById("warningMess");
+    if(warDiv.hasChildNodes()){
+        warDiv.firstChild.remove();
+    };
+}
