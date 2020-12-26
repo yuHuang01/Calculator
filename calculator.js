@@ -1,15 +1,16 @@
-let userInput = document.getElementById("userInput");
-let resultDisp = document.getElementById("resultDisp");
+let topScreen = document.getElementById("topScreen");
+let bottomScreen = document.getElementById("bottomScreen");
 let allBtns = document.getElementsByClassName("allBtns");
 let body = document.getElementById("body");
 let firstInput;
+let opToBeDone;
 let secondInput;
 
 for(let i = 0; i < allBtns.length; i++){
     allBtns[i].addEventListener("click", (e) => {
         let targetBtn = e.target;
         //First character entered
-        if(userInput.childNodes.length === 0){
+        if(topScreen.childNodes.length === 0){
             if(targetBtn.id === "equal"){
                 alert("The equation should be entered first!")
             }
@@ -37,8 +38,20 @@ for(let i = 0; i < allBtns.length; i++){
                 ClearAll()
             }
             else if(targetBtn.id === "equal"){
-                console.log(targetBtn)
-                console.log("equal ok")
+                if(document.getElementById("numberInput").textContent != "-"){
+                secondInput = document.getElementById("numberInput").textContent;
+                let result = Operate(opToBeDone, parseFloat(firstInput), parseFloat(secondInput));
+                bottomScreen.removeChild(bottomScreen.childNodes[0]);
+                topScreen.removeChild(topScreen.childNodes[0]);
+                let resultToStore = document.createElement("p");
+                resultToStore.style.marginTop = 0;
+                resultToStore.style.marginBottom = 0;
+                resultToStore.textContent = result;
+                bottomScreen.appendChild(resultToStore);
+                }
+                else{
+                    alert("You need to enter a number first!")
+                }
             }
             else if(targetBtn.classList.contains("numberBtns")){
                 let alreadyInput = document.getElementById("numberInput")
@@ -59,42 +72,44 @@ for(let i = 0; i < allBtns.length; i++){
                 }
             }
             else{
+                opToBeDone = e.target.id;
+                //Store the number and push it to the bottom screen
                 let alreadyInput = document.getElementById("numberInput")
                 let storedNum = document.createElement("p")
-                storedNum.textContent = userInput.childNodes[0].textContent;
+                storedNum.textContent = topScreen.childNodes[0].textContent;
                 firstInput = storedNum.textContent;
                 storedNum.id = "storedNum";
                 storedNum.style.marginTop = 0;
                 storedNum.style.marginBottom = 0;
-                resultDisp.appendChild(storedNum);
-                userInput.removeChild(alreadyInput)
+                bottomScreen.appendChild(storedNum);
+                topScreen.removeChild(alreadyInput)
             }
         }
     });
     
 }
 function AddFirstChar(a){
-    let defaultNum = document.createElement("p");
-    defaultNum.textContent = a.textContent;
-    defaultNum.style.marginTop = 0;
-    defaultNum.style.marginBottom = 0;
-    defaultNum.id = "numberInput";
-    userInput.appendChild(defaultNum);
+    let firstNum = document.createElement("p");
+    firstNum.textContent = a.textContent;
+    firstNum.style.marginTop = 0;
+    firstNum.style.marginBottom = 0;
+    firstNum.id = "numberInput";
+    topScreen.appendChild(firstNum);
 }
 function AddTheOthers(a){
-    let currentNum = userInput.childNodes[0];
+    let currentNum = topScreen.childNodes[0];
     currentNum.textContent += a.textContent;
 };
 function ClearAll(){
-    if(userInput.hasChildNodes() && resultDisp.hasChildNodes()){
-        userInput.firstChild.remove();
-        resultDisp.firstChild.remove();
+    if(topScreen.hasChildNodes() && bottomScreen.hasChildNodes()){
+        topScreen.firstChild.remove();
+        bottomScreen.firstChild.remove();
     }
-    else if(userInput.hasChildNodes() && !resultDisp.hasChildNodes()){
-        userInput.firstChild.remove();
+    else if(topScreen.hasChildNodes() && !bottomScreen.hasChildNodes()){
+        topScreen.firstChild.remove();
     }
-    else if(!userInput.hasChildNodes() && resultDisp.hasChildNodes()){
-        resultDisp.firstChild.remove();
+    else if(!topScreen.hasChildNodes() && bottomScreen.hasChildNodes()){
+        bottomScreen.firstChild.remove();
     }
 };
 function Operate(a, b, c){
@@ -103,7 +118,7 @@ function Operate(a, b, c){
             return b + c;
         case "minus":
             return b - c;
-        case "multiply":
+        case "multi":
             return b * c;
         case "division":
             return b / c;

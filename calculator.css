@@ -28,13 +28,13 @@ body{
     display: grid;
     grid-template-rows: 65% 35%;
 }
-#userInput{
+#topScreen{
     font-size: 37px;
     border-bottom: solid;
     border-color: lightgrey;
     border-width: 1px;
 }
-#resultDisp{
+#bottomScreen{
     font-size: 25px;
 }
 
