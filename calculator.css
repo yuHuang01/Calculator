@@ -1,17 +1,39 @@
 body{
-    padding: 0;
+    --bg-color : rgb(159, 215, 248);
+    --calc-body-bg-color: rgb(248, 214, 151);
+    --screen-bg-color: var(--num-btns-background-color);
+    --screen-bg-color: white;
+    --screen-text-and-border: black;
+    --button-part-color: rgb(56, 53, 53);
+    --op-btns-bg-color: rgb(223, 217, 217);
+    --num-btns-bg-color: white;
+    --clear-btn-bg-color: rgb(245, 143, 26);
+    --transition-delay: 1.5s;
+
+    height: 100%;
     margin: 0;
-    background-color: rgb(233, 118, 10);
+    background-color: var(--bg-color);
+    transition: var(--transition-delay);
 }
 
-
+body.dark{
+    --bg-color : rgb(85, 83, 83);
+    --calc-body-bg-color: rgb(41, 41, 46);
+    --screen-bg-color: rgb(70, 69, 69);
+    --screen-text-and-border: lightgrey;
+    --button-part-color: white;
+    --op-btns-bg-color: rgb(30, 30, 34);
+    --num-btns-bg-color: rgb(41, 41, 46);
+    --clear-btn-bg-color: rgb(204, 115, 13);
+    --icon-color: var(--button-part-color);
+}
 
 #calcBody{
     width: 300px;
     height: 400px;
     margin: auto;
     padding: 20px;
-    background-color: rgb(56, 56, 58);
+    background-color: var(--calc-body-bg-color);
     margin-top: 150px;
     border: solid;
     border-width: 2px;
@@ -20,8 +42,8 @@ body{
 #screen {
     height: 75px;
     margin-bottom: 23px;
-    background-color: white;
-    color: black;
+    background-color: var(--screen-bg-color);
+    color: var(--screen-text-and-border);
     border: solid;
     border-width: 1px;
     border-radius: 3px;
@@ -32,7 +54,7 @@ body{
 #topScreen{
     font-size: 37px;
     border-bottom: solid;
-    border-color: lightgrey;
+    border-color: var(--screen-text-and-border);
     border-width: 1px;
 }
 #bottomScreen{
@@ -44,7 +66,7 @@ body{
     width: 300px;
     display: grid;
     grid-template-columns: 20% 80%;
-    color: rgb(58, 57, 57);
+    color: var(--button-part-color);
 }
 .allBtns:hover{
     font-size: 45px;
@@ -61,7 +83,7 @@ body{
     grid-template-rows: repeat(5, 1fr);
 }
 .operationBtns{
-    background-color: rgb(201, 198, 198);
+    background-color: var(--op-btns-bg-color);
     font-size: 35px;
     width: 100%;
     justify-self: center;
@@ -72,8 +94,8 @@ body{
     border-width: 1px;
 }
 #equal{
-    background-color: rgb(201, 198, 198);
-    font-size: 40px;
+    background-color: var(--op-btns-bg-color);
+    font-size: 35px;
     width: 100%;
     justify-self: center;
     display: flex;
@@ -97,7 +119,7 @@ body{
     grid-template-rows: repeat(4, 1fr);
 }
 .numberBtns{
-    background-color: white;
+    background-color: var(--num-btns-bg-color);
     font-size: 35px;
     width: 100%;
     justify-self: center;
@@ -107,9 +129,29 @@ body{
     border: solid;
     border-width: 1px;
 }
+#theme{
+    background-color: var(--num-btns-bg-color);
+    font-size: 35px;
+    width: 100%;
+    justify-self: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: solid;
+    border-width: 1px;
+}
+#theme:hover{
+    --icon-color: var(--clear-btn-bg-color);
+}
+#icon{
+    margin: 0px;
+    padding: 10px;
+    display: block;
+    fill: var(--icon-color);
+}
 
 #clear{
-    background-color: rgb(243, 144, 31);
+    background-color: var(--clear-btn-bg-color);
     font-size: 40px;
     width: 100%;
     justify-self: center;

@@ -193,3 +193,8 @@ function RemoveWarnMess(){
         warDiv.firstChild.remove();
     };
 }
+
+//Dark/Light button
+document.querySelector("#theme").addEventListener("click", () =>{
+    document.body.classList.toggle("dark")
+})
