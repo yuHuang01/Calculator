@@ -92,6 +92,7 @@ body.dark{
     align-items: center;
     border: solid;
     border-width: 1px;
+    transition: 0.5s;
 }
 #equal{
     background-color: var(--op-btns-bg-color);
@@ -128,6 +129,7 @@ body.dark{
     align-items: center;
     border: solid;
     border-width: 1px;
+    transition: 0.5s;
 }
 #theme{
     background-color: var(--num-btns-bg-color);
@@ -139,6 +141,7 @@ body.dark{
     align-items: center;
     border: solid;
     border-width: 1px;
+    transition: 0.5s;
 }
 #theme:hover{
     --icon-color: var(--clear-btn-bg-color);
@@ -148,6 +151,7 @@ body.dark{
     padding: 10px;
     display: block;
     fill: var(--icon-color);
+    transition: var(--transition-delay);
 }
 
 #clear{

@@ -23,10 +23,11 @@ for(let i = 0; i < allBtns.length; i++){
             else{
                 if(targetBtn.classList.contains("numberBtns")){
                     if(topScreen.childNodes[0].textContent.length <= 15){
-                        RemoveWarnMess();
-                        AddTheOthers(targetBtn);
-                    }
-                    else{
+                            RemoveWarnMess();
+                            AddTheOthers(targetBtn);
+                    }else if(targetBtn.id === "delete"){
+                        deleteLast();
+                    }else{
                         WarnMess("Your operation has reached the limit of the screen!")
                     }
                 }
@@ -69,13 +70,13 @@ for(let i = 0; i < allBtns.length; i++){
                     }
                     else{
                         if(targetBtn.id === "clear"){
-                            ClearAll()
+                            ClearAll();
                         }
                         else if(targetBtn.id === "delete"){
-
+                            deleteLast();
                         }
                         else if(targetBtn.id === "equal"){
-                            finishOp()
+                            finishOp();
                         }
                         else{WarnMess("Your operation has reached the limit of the screen!")
                         }
